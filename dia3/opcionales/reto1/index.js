@@ -35,13 +35,3 @@ app.post('/', (req, res) => {
 app.listen(puerto, () => {
     console.log(`\nServidor corriendo en el puerto ${puerto}\n`);
 });
-
-// Función para controlar la excepción al intentar convertir a json
-// function jsonStringValido(jsonString) {
-//     try {
-//         console.log(JSON.parse(jsonString));
-//     } catch (e) {
-//         return false;
-//     }
-//     return true;
-// }
