@@ -10,4 +10,4 @@
     - Retos 1, 2, 3, opcional 1 y opcional 2
     
 ## Express y API REST (Día 4)
-    - Retos 1 y 2
+    - Retos 1, 2, opcional 1 y opcional 2
