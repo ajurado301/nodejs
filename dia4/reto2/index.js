@@ -1,4 +1,5 @@
-// importar  express
+// importar  express y clase Professional
+const claseProfessional = require('./clases/professional');
 const express = require('express');
 
 // Crear servidor express
@@ -9,101 +10,97 @@ let puerto = 3000;
 let profesionales = [];
 
 // Middleware para capturar body json
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Respuesta a cualquier petición en '/'
 app.all('/', (req, res) => {
-    res.status(200).json({ ok: true, message: 'endpoint /' });
+    let respuesta = { ok: true, message: 'Punto de inicio /' }
+    res.status(200).send(respuesta);
 })
+
 
 // Gestión del endpoint '/profesionales'
 // GET (todos o por query id)
 app.get('/profesionales', (req, res) => {
+    let respuesta;
     let id = req.query.id;
 
-    if (profesionales.length === 0) { 
-        res.status(200).json({ ok: true, message: 'Lista de profesionales vacía:' });
-    } else if (!id) {
-            res.status(200).json({ ok: true, message: 'Lista de profesionales:', profesionales: profesionales });
-    }else {
-        let profesional = profesionales.filter((profesional) => { return profesional.id === parseInt(id) })[0] || null;
-        if (!profesional) {
-            res.status(200).json({ ok: true, message: `Profesional con id: ${id} no encontrado` });
-        } else {
-            res.status(200).json({ ok: true, message: `Profesional con id: ${id}:`, profesional: profesional });
+    if (!id) {
+        respuesta ={ ok: true, message: 'Lista de profesionales:', profesionales: profesionales };
+    } else {
+        id = parseInt(id); 
+        if (id < profesionales.length) {
+            respuesta = { ok: true, message: `Profesional con id ${id}:`, profesional: profesionales[id] }
+        }else {
+            respuesta = { ok: false, message: `Profesional con id ${id} no encontrado` }
         }
-    }
-})
-
-// POST (Agregamos con un id igual al del último profesional + 1)
-app.post('/profesionales', (req, res) => {
-    let id = (profesionales.length > 0) ? profesionales[profesionales.length - 1].id + 1 : 1;
-    let profesional = {};
-    profesional.id = id;
-    for(atributo in req.body) {
-        profesional[atributo] = req.body[atributo]
     };
-    profesionales.push(profesional);
-    res.status(200).json({ ok: true, message: 'Profesional agregado', profesional: profesional });    
+    res.status(200).send(respuesta);
 })
 
-// PUT (por query id)
+// POST
+app.post('/profesionales', (req, res) => {
+    let respuesta = { ok: true, message: 'Profesional agregado' };
+    profesionales.push(bodyToProfesional(req.body));
+    res.status(200).send(respuesta);      
+})
+
+// PUT
 app.put('/profesionales', (req, res) => {
-    let id = req.query.id;
+    let respuesta;
+    let id = req.body.id;
 
-    if (profesionales.length === 0) { 
-        res.status(200).json({ ok: true, message: 'Lista de profesionales vacía:' });
-    }else if(!id) {
-        res.status(200).json({ ok: true, message: 'Se necesita el id vía query' });
+    if (id < profesionales.length) {
+        profesionales[id] = bodyToProfesional(req.body);
+        respuesta = { ok: true, message: `Profesional con id ${id} actualizado` }
     }else {
-        let i = 0;
-        let encontrado = false;
-        while (i < profesionales.length && !encontrado) {
-            if (profesionales[i].id === parseInt(id)) {
-                encontrado = true;
-            }else {
-                i++;
-            }
-        };
-        if (!encontrado) {
-            res.status(200).json({ ok: true, message: `Profesional con id: ${id} no encontrado` });
-        } else {
-            for(atributo in req.body) {
-                profesionales[i][atributo] = req.body[atributo]
-            };
-            res.status(200).json({ ok: true, message: `Profesional con id: ${id} actualizado:`, profesional: profesionales[i] });
-        }
-    }    
+        respuesta = { ok: false, message: `Profesional con id ${id} no encontrado` }
+    };
+    res.status(200).send(respuesta);
 })
 
-// DELETE (por query id)
+// DELETE
 app.delete('/profesionales', (req, res) => {
-    let id = req.query.id;
+    let respuesta;
+    let id = req.body.id;
 
-    if (profesionales.length === 0) { 
-        res.status(200).json({ ok: true, message: 'Lista de profesionales vacía:' });
-    }else if(!id) {
-        res.status(200).json({ ok: true, message: 'Se necesita el id vía query' });
+    if (id < profesionales.length) {
+        profesionales.splice(id, 1);
+        respuesta = { ok: true, message: `Profesional con id ${id} eliminado` }
     }else {
-        let i = 0;
-        let encontrado = false;
-        while (i < profesionales.length && !encontrado) {
-            if (profesionales[i].id === parseInt(id)) {
-                encontrado = true;
-            }else {
-                i++;
-            }
-        };
-        if (!encontrado) {
-            res.status(200).json({ ok: true, message: `Profesional con id: ${id} no encontrado` });
-        } else {
-            profesionales.splice(i, 1);
-            res.status(200).json({ ok: true, message: `Profesional con id: ${id} eliminado:` });
-        }
-    }       
+        respuesta = { ok: false, message: `Profesional con id ${id} no encontrado` }
+    };
+    res.status(200).send(respuesta);
+})
+
+// Respuesta a cualquier endponit erroneo
+app.use((req, res) => {
+    respuesta = {ok: false, codigo: 404, mensaje: 'URL no encontrada'};
+    res.status(404).send(respuesta);
 })
 
 // Poner servidor en marcha
 app.listen(puerto, () => {
     console.log(`\nServidor corriendo en el puerto ${puerto}`)
 })
+
+function bodyToProfesional(json) {
+    let result = new claseProfessional.Professional();
+
+    result.name = json.name;
+    result.age = json.age;
+    result.genre = json.genre;
+    result.weight = json.weight;
+    result.height = json.height;
+    result.hairColor = json.hairColor;
+    result.eyeColor = json.eyeColor;
+    result.race = json.race;
+    result.isRetired = json.isRetired;
+    result.isRetired = json.isRetired;
+    result.nationality = json.nationality;
+    result.oscarsNumber = json.oscarsNumber;
+    result.profession = json.profession;
+
+    return result;
+}
