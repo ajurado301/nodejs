@@ -14,24 +14,6 @@ h5 {
     margin-bottom: 0rem;
 }
 
-/* Tabla de resultados */
-.resultados table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-}
-  
-.resultados td, th {
-    border: 1px solid #dddddd;
-    font-size: 10px;
-    text-align: left;
-    padding: 2px;
-}
-  
-.resultados tr:nth-child(even) {
-    background-color: #dddddd;
-}
-
 /* Modificando estilos de Bootsrap */
 .form-check-input {
     width: 0.8em;
