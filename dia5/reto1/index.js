@@ -76,6 +76,9 @@ async function crear() {
         }
 
         $('#profesionalForm').trigger("reset");
+        if ($('#tablaResultados').html() != '') {
+            mostrar();
+        }
     }else {
         mostrarToast('Alerta', cuerpo);
     }
@@ -104,12 +107,15 @@ async function modificar() {
                 let respuesta = await fetch(urlBase, parametros);
                 let respuestaJson = await respuesta.json();
                 let titulo = (respuestaJson.ok == true) ? 'Correcto' : 'Alerta';
-                mostrarToast(titulo, respuestaJson.message)  
+                mostrarToast(titulo, respuestaJson.message)
             } catch (error) {
                 mostrarToast('Error', respuestaJson.message)
             }
 
             $('#profesionalForm').trigger("reset");
+            if ($('#tablaResultados').html() != '') {
+                mostrar();
+            }
         }else {
             mostrarToast('Alerta', cuerpo);
         }
@@ -143,6 +149,9 @@ async function eliminar() {
         }
     };
     $('#profesionalForm').trigger("reset");
+    if ($('#tablaResultados').html() != '') {
+        mostrar();
+    }
 }
 
 // Leer formulario
