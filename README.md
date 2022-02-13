@@ -11,3 +11,6 @@
     
 ## Express y API REST (Día 4)
     - Retos 1, 2, opcional 1 y opcional 2
+
+## Consumo de APIs y Peticiones HTTP (Día 5)
+    - Reto 1 y 2

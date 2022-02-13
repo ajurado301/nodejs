@@ -1,0 +1,22 @@
+ /* Limpiadores */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Modificando estilos html */
+label {
+    font-size: .8rem;
+}
+
+h5 {
+    margin-bottom: 0rem;
+}
+
+/* Modificando estilos de Bootsrap */
+.form-check-input {
+    width: 0.8em;
+    height: 0.8em;
+    margin-top: 0.5em;
+}
