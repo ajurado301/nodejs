@@ -1,0 +1,17 @@
+ /* Limpiadores */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#listaPokemon li{
+    font-size: .75rem;
+    color: rgb(75, 75, 255);
+    cursor: pointer;
+}
+
+#listaPokemon li:hover {
+    background-color: #f0f0f0;
+    color: rgb(0, 122, 27);
+}
