@@ -18,15 +18,18 @@ jQuery(() => {
 })
 
 // Guardar todos los Pokemons (nombres y urls)
-async function guardarTodos() {
-    try {
-        let url = urlApiPokemon + '/pokemon/?limit=5000';
-        let respuesta = await fetch(url, parametros);
-        let respuestaJson = await respuesta.json();
+function guardarTodos() {
+    let url = urlApiPokemon + '/pokemon/?limit=5000';
+    fetch(url, parametros)
+    .then((respuesta) => {
+        return respuesta.json();
+    })
+    .then((respuestaJson) => {
         pokemons = respuestaJson.results;
-    } catch (error) {
-        console.log(error)
-    }
+    })
+    .catch((error) => {
+        console.log(error);
+    });
 }
 
 // Filtrar nombres de Pokemons con límite de 15
@@ -52,24 +55,28 @@ function filtrarNombres() {
 }
 
 // Obetner Pokemon (llamado desde el click del li html creado en filtrarNombres)
-async function obtenerPokemon(urlPokemon) {
+function obtenerPokemon(urlPokemon) {
     $('#busquedaForm').trigger('reset');
     $('#listaPokemon').html('');
-    try {
-        let pokemon = await fetch(urlPokemon, parametros);
-        let pokemonJson = await pokemon.json();        
+
+    fetch(urlPokemon, parametros)
+    .then((pokemon) => {
+        return pokemon.json();
+    })
+    .then((pokemonJson) => {
         let datosCard = {
             nombre: pokemonJson.name,
             habilidades: pokemonJson.abilities.map((habilidad) => { return habilidad.ability.name }),
             urlImagen: pokemonJson.sprites.other['official-artwork'].front_default
         };
-        mostrarCard(datosCard);  
-    } catch (error) {
+        mostrarCard(datosCard);
+    })
+    .catch((error) => {
         console.log(error)
-    }
+    })
 }
 
-// Mostrar Card Pokemon // TODO: preparar Card bootstrap
+// Mostrar Card Pokemon 
 function mostrarCard(datosCard) {
     let divCard = $('#divCard');
     divCard.html('');
